@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    implementation ':Corona@aar'
+    implementation 'com.huawei.hms:hianalytics:5.2.0.301'
+    implementation 'com.huawei.agconnect:agconnect-crash:1.5.1.300'
+
+}
+
+task extractPluginFromAAR(type: Copy) {
+    group "Corona"
+    dependsOn "assembleRelease"
+    from {
+        zipTree("build/outputs/aar/${project.name}-release.aar").matching { include '**/classes.jar' }.singleFile
+    }
+    into('build/outputs')
+    rename ('classes.jar', 'plugin.huaweiAnalyticsKit.jar')
+}
+
